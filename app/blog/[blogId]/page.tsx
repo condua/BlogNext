@@ -7,6 +7,7 @@ import { fetchBlogById } from "@/redux/blogSlice";
 import DOMPurify from "dompurify";
 import Head from "next/head";
 import MathJaxRenderer from "@/components/MathJaxRenderer";
+import { AppDispatch } from "@/redux/store";
 
 interface Blog {
   id: string;
@@ -21,13 +22,12 @@ interface Blog {
 
 export default function BlogDetail() {
   const { blogId } = useParams() as { blogId: string };
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { blog, loading, error } = useSelector((state: any) => state.blog) as {
     blog: Blog;
     loading: boolean;
     error: string | null;
   };
-
   useEffect(() => {
     if (blogId) {
       dispatch(fetchBlogById(blogId));
@@ -228,13 +228,13 @@ export default function BlogDetail() {
   };
 
   return (
-    <div className="px-6 py-10 w-3/5 m-auto">
+    <div className="px-6 py-10 w-full md:w-3/6 m-auto">
       <Head>
         {/* Cấu hình MathJax 3 */}
         <title>{blog.title}</title>
         <meta
           name="description"
-          content={blog.summary || "Bài viết chi tiết"}
+          content={blog.content.slice(0, 100) || "Bài viết chi tiết"}
         />
         <meta property="og:title" content={blog.title} />
         <meta
@@ -272,7 +272,7 @@ export default function BlogDetail() {
         <img
           src={blog.imageTitle}
           alt={blog.title}
-          className="w-full object-center rounded mb-6 mx-auto"
+          className="w-full max-h-100 object-cover rounded mb-6 mx-auto"
           // w-40 = 10rem = 160px, h-40 tương tự
         />
       )}
@@ -295,8 +295,8 @@ export default function BlogDetail() {
       </div>
 
       {/* Tên tác giả cuối trang */}
-      <div className="mt-10 text-right text-gray-600 italic">
-        — {blog.author}
+      <div className="mt-10 text-right text-gray-600 italic bold">
+        {blog.author}
       </div>
 
       <script
