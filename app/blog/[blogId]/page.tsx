@@ -20,6 +20,55 @@ interface Blog {
   updatedAt?: string;
 }
 
+// -- Đầu tiên thêm hàm fetch blog cho server-side metadata --
+async function getBlogById(blogId: string): Promise<Blog | null> {
+  try {
+    // Ví dụ gọi API nội bộ hoặc từ DB
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blogs/${blogId}`,
+      { cache: "no-store" }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data as Blog;
+  } catch (error) {
+    console.error("Error fetching blog metadata:", error);
+    return null;
+  }
+}
+
+// -- Hàm generateMetadata chạy ở server --
+export async function generateMetadata({
+  params,
+}: {
+  params: { blogId: string };
+}) {
+  const blog = await getBlogById(params.blogId);
+
+  if (!blog) {
+    return {
+      title: "Bài viết không tồn tại",
+      description: "Không tìm thấy bài viết bạn yêu cầu.",
+    };
+  }
+
+  return {
+    title: blog.title,
+    description: blog.summary || blog.content.slice(0, 150),
+    openGraph: {
+      title: blog.title,
+      description: blog.summary || blog.content.slice(0, 150),
+      images: blog.imageTitle ? [blog.imageTitle] : [],
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: blog.title,
+      description: blog.summary || blog.content.slice(0, 150),
+      images: blog.imageTitle ? [blog.imageTitle] : [],
+    },
+  };
+}
 export default function BlogDetail() {
   const { blogId } = useParams() as { blogId: string };
   const dispatch = useDispatch<AppDispatch>();
