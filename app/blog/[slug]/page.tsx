@@ -8,7 +8,24 @@ interface Params {
 export async function generateMetadata({ params }: { params: Params }) {
   const post = getPostBySlug(params.slug);
 
-  if (!post) return {};
+  if (!post) {
+    return {
+      title: "Post Not Found | My Blog",
+      description: "Sorry, the post you are looking for does not exist.",
+      openGraph: {
+        title: "Post Not Found",
+        description: "Sorry, the post you are looking for does not exist.",
+        images: [],
+        type: "article",
+      },
+      twitter: {
+        card: "summary",
+        title: "Post Not Found",
+        description: "Sorry, the post you are looking for does not exist.",
+        images: [],
+      },
+    };
+  }
 
   return {
     title: `${post.title} | My Blog`,
