@@ -4,9 +4,6 @@ import { notFound } from "next/navigation";
 interface Params {
   slug: string;
 }
-interface PageProps {
-  params: Params;
-}
 
 export async function generateMetadata({ params }: { params: Params }) {
   const post = getPostBySlug(params.slug);
@@ -55,7 +52,12 @@ export async function generateMetadata({ params }: { params: Params }) {
   };
 }
 
-export default async function PostDetailPage({ params }: PageProps) {
+// Sửa phần này
+export default async function PostDetailPage({
+  params,
+}: {
+  params: Record<string, string>;
+}) {
   const post = getPostBySlug(params.slug);
 
   if (!post) return notFound();
