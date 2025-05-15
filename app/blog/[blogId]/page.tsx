@@ -42,21 +42,21 @@ export default function BlogDetail() {
   }, [blog]);
 
   // Cập nhật title và các meta tags
-  useEffect(() => {
-    if (blog) {
-      document.title = blog.title;
+  //   useEffect(() => {
+  //     if (blog) {
+  //       document.title = blog.title;
 
-      const ogTitle = document.querySelector('meta[property="og:title"]');
-      const ogDescription = document.querySelector(
-        'meta[property="og:description"]'
-      );
-      const ogImage = document.querySelector('meta[property="og:image"]');
-      if (ogTitle) ogTitle.setAttribute("content", blog.title);
-      if (ogDescription)
-        ogDescription.setAttribute("content", blog.summary || "");
-      if (ogImage) ogImage.setAttribute("content", blog.imageTitle || "");
-    }
-  }, [blog]);
+  //       const ogTitle = document.querySelector('meta[property="og:title"]');
+  //       const ogDescription = document.querySelector(
+  //         'meta[property="og:description"]'
+  //       );
+  //       const ogImage = document.querySelector('meta[property="og:image"]');
+  //       if (ogTitle) ogTitle.setAttribute("content", blog.title);
+  //       if (ogDescription)
+  //         ogDescription.setAttribute("content", blog.summary || "");
+  //       if (ogImage) ogImage.setAttribute("content", blog.imageTitle || "");
+  //     }
+  //   }, [blog]);
 
   if (loading) return <p className="p-6">Đang tải bài viết...</p>;
   if (error) return <p className="p-6 text-red-500">Lỗi: {error}</p>;
@@ -231,6 +231,20 @@ export default function BlogDetail() {
     <div className="px-6 py-10 w-3/5 m-auto">
       <Head>
         {/* Cấu hình MathJax 3 */}
+        <title>{blog.title}</title>
+        <meta
+          name="description"
+          content={blog.summary || "Bài viết chi tiết"}
+        />
+        <meta property="og:title" content={blog.title} />
+        <meta
+          property="og:description"
+          content={blog.content.slice(0, 100) || ""}
+        />
+        {blog.imageTitle && (
+          <meta property="og:image" content={blog.imageTitle} />
+        )}
+        <meta property="og:type" content="article" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
