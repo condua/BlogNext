@@ -6,7 +6,10 @@ interface Params {
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
+  // Nếu getPostBySlug là async, nhớ await
   const post = getPostBySlug(params.slug);
+  // hoặc
+  // const post = await getPostBySlug(params.slug);
 
   if (!post) {
     return {
@@ -52,13 +55,11 @@ export async function generateMetadata({ params }: { params: Params }) {
   };
 }
 
-// Sửa phần này
-export default async function PostDetailPage({
-  params,
-}: {
-  params: Record<string, string>;
-}) {
+export default async function PostDetailPage({ params }: { params: Params }) {
+  // Nếu getPostBySlug là async
   const post = getPostBySlug(params.slug);
+  // hoặc
+  // const post = await getPostBySlug(params.slug);
 
   if (!post) return notFound();
 
