@@ -6,7 +6,7 @@ export const posts: Post[] = [
     title: "Hello Next.js 13",
     slug: "hello-nextjs-13",
     description: "This is a sample blog post using the new App Router.",
-    image: "https://www.mlpa.site/logo.png",
+    image: "https://res.cloudinary.com/dy9yts4fa/image/upload/v1747114175/iki5e6m0ahrn3cavxre2.png",
     content: `This is a sample blog post using the new App Router.
     
 More detailed content here...`,
@@ -16,7 +16,7 @@ More detailed content here...`,
     title: "TypeScript in Next.js",
     slug: "typescript-nextjs",
     description: "Learn how to use TypeScript in your Next.js app!",
-    image: "https://www.mlpa.site/logo.png",
+    image: "https://res.cloudinary.com/dy9yts4fa/image/upload/v1747114175/iki5e6m0ahrn3cavxre2.png",
     content: `Learn how to use TypeScript in your Next.js app!
     
 More detailed content here...`,
