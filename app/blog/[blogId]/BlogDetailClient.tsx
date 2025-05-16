@@ -31,8 +31,8 @@ export default function BlogDetailClient({ blogId }: { blogId: string }) {
   }, [dispatch, blogId]);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && window.MathJax) {
-      window.MathJax.typesetPromise();
+    if (typeof window !== "undefined" && (window as any).MathJax) {
+      (window as any).MathJax.typesetPromise?.();
     }
   }, [blog]);
 
