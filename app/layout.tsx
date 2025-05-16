@@ -6,11 +6,15 @@ import { Providers } from "./providers"; // 👈 thêm dòng này
 import Head from "next/head";
 import Footer from "@/components/Footer";
 const inter = Inter({ subsets: ["latin"] });
-
 export const metadata = {
   title: "MLPA Blog",
   description: "A simple Next.js blog with Tailwind CSS",
   keywords: ["blog", "nextjs", "tailwindcss", "redux", "react"],
+  icons: {
+    icon: "/favicon.ico", // favicon thường
+    shortcut: "/favicon.ico", // optional
+    apple: "/apple-touch-icon.png", // optional cho iOS
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
