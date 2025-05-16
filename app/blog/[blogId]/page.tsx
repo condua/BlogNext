@@ -38,9 +38,8 @@ export async function generateMetadata({
         card: "summary_large_image",
         title: blog.title,
         description: stripHtml(blog.content).slice(0, 160),
-        images: blog.imageTitle
-          ? [new URL(blog.imageTitle, process.env.SITE_URL).toString()]
-          : [],
+        images: blog.imageTitle,
+        creator: blog.author,
       },
     };
   } catch (error) {
