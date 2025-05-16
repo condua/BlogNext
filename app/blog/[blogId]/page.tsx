@@ -1,10 +1,13 @@
-// app/blogs/[blogId]/page.tsx
 import { Metadata } from "next";
 import { fetchBlogByIdServer } from "@/lib/serverBlogService";
 import BlogDetailClient from "./BlogDetailClient";
 
-// ✅ Đừng tự gán kiểu cho params
-export async function generateMetadata({ params }: any): Promise<Metadata> {
+// SEO metadata
+export async function generateMetadata({
+  params,
+}: {
+  params: { blogId: string };
+}): Promise<Metadata> {
   try {
     const blog = await fetchBlogByIdServer(params.blogId);
 
@@ -15,7 +18,11 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
         title: blog.title,
         description: blog.content.slice(0, 160),
         images: blog.imageTitle
-          ? [{ url: new URL(blog.imageTitle, process.env.SITE_URL).toString() }]
+          ? [
+              {
+                url: new URL(blog.imageTitle, process.env.SITE_URL!).toString(),
+              },
+            ]
           : [],
         type: "article",
         publishedTime: blog.createdAt,
@@ -27,11 +34,11 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
         title: blog.title,
         description: blog.content.slice(0, 160),
         images: blog.imageTitle
-          ? [new URL(blog.imageTitle, process.env.SITE_URL).toString()]
+          ? [new URL(blog.imageTitle, process.env.SITE_URL!).toString()]
           : [],
       },
     };
-  } catch (error) {
+  } catch {
     return {
       title: "Bài viết không tồn tại",
       description: "Không tìm thấy bài viết được yêu cầu",
@@ -39,7 +46,8 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
   }
 }
 
-export default async function BlogDetailPage({
+// Page component
+export default function BlogDetailPage({
   params,
 }: {
   params: { blogId: string };
