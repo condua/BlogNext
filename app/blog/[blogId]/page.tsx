@@ -20,7 +20,7 @@ export async function generateMetadata({
     const { blogId } = await params;
 
     const blog = await fetchBlogByIdServer(blogId);
-    const stripHtml = (html: string) => html.replace(/<[^>]+>/g, "");
+    const stripHtml = (html: string) => html.replace(/<[^>]+>/g, " ");
 
     return {
       title: blog.title,
