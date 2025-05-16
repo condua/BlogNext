@@ -11,11 +11,6 @@ export const metadata = {
   title: "MLPA Blog",
   description: "A simple Next.js blog with Tailwind CSS",
   keywords: ["blog", "nextjs", "tailwindcss", "redux", "react"],
-  icons: {
-    icon: "/logo.ico", // file phải nằm trong thư mục public
-    shortcut: "/logo.ico",
-    apple: "/logo.ico",
-  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

@@ -24,10 +24,10 @@ export async function generateMetadata({
 
     return {
       title: blog.title,
-      description: stripHtml(blog.content).slice(0, 160),
+      description: blog.content.slice(0, 160),
       openGraph: {
         title: blog.title,
-        description: stripHtml(blog.content).slice(0, 160),
+        description: blog.content.slice(0, 160),
         images: blog.imageTitle
           ? [
               {
@@ -43,7 +43,7 @@ export async function generateMetadata({
       twitter: {
         card: "summary_large_image",
         title: blog.title,
-        description: stripHtml(blog.content).slice(0, 160),
+        description: blog.content.slice(0, 160),
         images: blog.imageTitle
           ? [new URL(blog.imageTitle, process.env.SITE_URL).toString()]
           : [],
