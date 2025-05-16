@@ -1,8 +1,10 @@
-export interface Post {
+export interface Blog {
   _id: string;
   title: string;
-  description: string;
-  image: string;
   content: string;
-  
+  summary?: string;
+  imageTitle?: string;
+  author: string;
+  createdAt: string;
+  updatedAt?: string;
 }
