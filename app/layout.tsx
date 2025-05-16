@@ -4,11 +4,18 @@ import { ReactNode } from "react";
 import { Inter } from "next/font/google";
 import { Providers } from "./providers"; // 👈 thêm dòng này
 import Head from "next/head";
+import Footer from "@/components/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "My Blog",
+  title: "MLPA Blog",
   description: "A simple Next.js blog with Tailwind CSS",
+  keywords: ["blog", "nextjs", "tailwindcss", "redux", "react"],
+  icons: {
+    icon: "/logo.ico", // file phải nằm trong thư mục public
+    shortcut: "/logo.ico",
+    apple: "/logo.ico",
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -58,9 +65,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </div>
           </header>
           <main className="flex-1  mx-auto w-full ">{children}</main>
-          <footer className="bg-white border-t py-4 text-center text-sm text-gray-500">
-            © {new Date().getFullYear()} My Blog. All rights reserved.
-          </footer>
+          <Footer />
         </Providers>
       </body>
     </html>
