@@ -19,6 +19,7 @@ interface Blog {
   createdAt: string;
   updatedAt?: string;
 }
+// quick and dirty (not ideal for production)
 
 export default function BlogDetailClient({ blogId }: { blogId: string }) {
   const dispatch = useDispatch<AppDispatch>();
@@ -192,7 +193,9 @@ export default function BlogDetailClient({ blogId }: { blogId: string }) {
       "<br />" // Line break
     );
   const handlePrint = () => {
-    const printContent = document.getElementById("printable-blog").innerHTML;
+    const printContent = document.getElementById("printable-blog");
+    if (!printContent) return;
+
     const iframe = document.createElement("iframe");
     iframe.style.position = "absolute";
     iframe.style.width = "0";
@@ -200,66 +203,84 @@ export default function BlogDetailClient({ blogId }: { blogId: string }) {
     iframe.style.border = "none";
     document.body.appendChild(iframe);
 
-    const iframeDoc = iframe.contentWindow.document;
+    const iframeDoc = iframe.contentWindow?.document;
+    if (!iframeDoc) return;
+
     iframeDoc.open();
     iframeDoc.write(`
-          <html>
-            <head>
-              <title>Printable Page</title>
-              <style>
-                body {
-                  font-family: "Times New Roman", serif;
-                  margin: 20mm;
-                  position: relative;
-                  color: #000;
-                  line-height: 1.8;
-                }
-                img {
-                  max-width: 100%;
-                  height: auto;
-                }
-                h1, h2, h3, h4, h5, h6 {
-                  margin-top: 1.5rem;
-                  line-height: 1.4;
-                }
-                table {
-                  width: 100%;
-                  border-collapse: collapse;
-                  margin-bottom: 20px;
-                }
-                th, td {
-                  border: 1px solid #ccc;
-                  padding: 12px;
-                  text-align: left;
-                }
-                p {
-                  margin-bottom: 10px;
-                }
-              </style>
-              <script type="text/javascript" async
-                src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-              </script>
-            </head>
-            <body>
-              <div>
-                ${printContent}
-              </div>
-            </body>
-          </html>
-        `);
+    <html>
+      <head>
+        <title>Printable Page</title>
+        <style>
+          body {
+            font-family: "Times New Roman", serif;
+            margin: 20mm;
+            color: #000;
+            line-height: 1.8;
+          }
+          img {
+            max-width: 100%;
+            height: auto;
+          }
+          h1, h2, h3, h4, h5, h6 {
+            margin-top: 1.5rem;
+            line-height: 1.4;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+          }
+          th, td {
+            border: 1px solid #ccc;
+            padding: 12px;
+            text-align: left;
+          }
+          p {
+            margin-bottom: 10px;
+          }
+        </style>
+        <script>
+          window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+          };
+        </script>
+        <script type="text/javascript" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script>
+      </head>
+      <body>
+        <div id="content">
+          ${printContent.innerHTML}
+        </div>
+      </body>
+    </html>
+  `);
     iframeDoc.close();
 
-    // Gọi lại MathJax để render công thức toán học
-    iframe.contentWindow.onload = () => {
-      iframe.contentWindow.MathJax.Hub.Queue([
-        "Typeset",
-        iframe.contentWindow.MathJax.Hub,
-      ]);
+    // Chờ MathJax render xong rồi mới in
+    iframe.onload = () => {
+      const tryPrint = () => {
+        if (iframe.contentWindow?.MathJax?.typesetPromise) {
+          iframe.contentWindow.MathJax.typesetPromise()
+            .then(() => {
+              iframe.contentWindow?.focus();
+              iframe.contentWindow?.print();
+            })
+            .catch((err: any) => {
+              console.error("MathJax typeset failed:", err);
+              iframe.contentWindow?.print(); // fallback
+            });
+        } else {
+          // Nếu MathJax chưa load xong, thử lại sau 100ms
+          setTimeout(tryPrint, 100);
+        }
+      };
+      tryPrint();
     };
-
-    iframe.contentWindow.focus();
-    iframe.contentWindow.print();
   };
+
   return (
     <div className="px-6 py-10 w-full md:w-3/4 lg:w-2/3 xl:w-1/2 mx-auto">
       {blog.imageTitle && (
