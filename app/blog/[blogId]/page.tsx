@@ -8,13 +8,12 @@ interface PageProps {
     blogId: string;
   };
 }
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+// ✅ Đừng tự gán kiểu cho params
+export async function generateMetadata({ params }: any): Promise<Metadata> {
   try {
     const blog = await fetchBlogByIdServer(params.blogId);
 
-    const metadata: Metadata = {
+    return {
       title: blog.title,
       description: blog.content.slice(0, 160),
       openGraph: {
@@ -37,8 +36,6 @@ export async function generateMetadata({
           : [],
       },
     };
-
-    return metadata;
   } catch (error) {
     return {
       title: "Bài viết không tồn tại",
@@ -47,6 +44,10 @@ export async function generateMetadata({
   }
 }
 
-export default function BlogDetailPage({ params }: PageProps) {
+export default async function BlogDetailPage({
+  params,
+}: {
+  params: { blogId: string };
+}) {
   return <BlogDetailClient blogId={params.blogId} />;
 }
