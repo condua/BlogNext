@@ -1,24 +1,38 @@
-// app/blog/[blogId]/page.tsx
+// app/blogs/[blogId]/page.tsx
 import { Metadata } from "next";
 import { fetchBlogByIdServer } from "@/lib/serverBlogService";
 import BlogDetailClient from "./BlogDetailClient";
 
+// Kiểu props chính xác cho dynamic route
+// type PageProps = {
+//   params: {
+//     blogId: string;
+//   };
+// };
+
+// Hàm tạo metadata động cho SEO
 export async function generateMetadata({
   params,
 }: {
-  params: { blogId: string };
-}): Promise<Metadata> {
+  params: Promise<{ blogId: string }>;
+}) {
   try {
-    const blog = await fetchBlogByIdServer(params.blogId);
+    const { blogId } = await params;
+
+    const blog = await fetchBlogByIdServer(blogId);
 
     return {
       title: blog.title,
-      description: blog.summary || blog.content.slice(0, 160),
+      description: blog.content.slice(0, 160),
       openGraph: {
         title: blog.title,
-        description: blog.summary || blog.content.slice(0, 160),
+        description: blog.content.slice(0, 160),
         images: blog.imageTitle
-          ? [{ url: new URL(blog.imageTitle, process.env.SITE_URL).toString() }]
+          ? [
+              {
+                url: new URL(blog.imageTitle, process.env.SITE_URL).toString(),
+              },
+            ]
           : [],
         type: "article",
         publishedTime: blog.createdAt,
@@ -28,7 +42,7 @@ export async function generateMetadata({
       twitter: {
         card: "summary_large_image",
         title: blog.title,
-        description: blog.summary || blog.content.slice(0, 160),
+        description: blog.content.slice(0, 160),
         images: blog.imageTitle
           ? [new URL(blog.imageTitle, process.env.SITE_URL).toString()]
           : [],
@@ -42,10 +56,12 @@ export async function generateMetadata({
   }
 }
 
-export default function BlogDetailPage({
+// Component chính
+export default async function BlogDetailPage({
   params,
 }: {
-  params: { blogId: string };
+  params: Promise<{ blogId: string }>;
 }) {
-  return <BlogDetailClient blogId={params.blogId} />;
+  const { blogId } = await params;
+  return <BlogDetailClient blogId={blogId} />;
 }
