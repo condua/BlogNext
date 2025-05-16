@@ -28,13 +28,7 @@ export async function generateMetadata({
       openGraph: {
         title: blog.title,
         description: stripHtml(blog.content).slice(0, 160),
-        images: blog.imageTitle
-          ? [
-              {
-                url: new URL(blog.imageTitle, process.env.SITE_URL).toString(),
-              },
-            ]
-          : [],
+        images: blog.imageTitle,
         type: "article",
         publishedTime: blog.createdAt,
         modifiedTime: blog.updatedAt || blog.createdAt,
