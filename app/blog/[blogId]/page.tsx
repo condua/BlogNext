@@ -3,11 +3,14 @@ import { Metadata } from "next";
 import { fetchBlogByIdServer } from "@/lib/serverBlogService";
 import BlogDetailClient from "./BlogDetailClient";
 
+interface PageProps {
+  params: {
+    blogId: string;
+  };
+}
 export async function generateMetadata({
   params,
-}: {
-  params: { blogId: string };
-}): Promise<Metadata> {
+}: PageProps): Promise<Metadata> {
   try {
     const blog = await fetchBlogByIdServer(params.blogId);
 
@@ -44,10 +47,6 @@ export async function generateMetadata({
   }
 }
 
-export default async function BlogDetailPage({
-  params,
-}: {
-  params: { blogId: string };
-}) {
+export default function BlogDetailPage({ params }: PageProps) {
   return <BlogDetailClient blogId={params.blogId} />;
 }
