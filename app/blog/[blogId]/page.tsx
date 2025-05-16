@@ -1,8 +1,8 @@
+// app/blog/[blogId]/page.tsx
 import { Metadata } from "next";
 import { fetchBlogByIdServer } from "@/lib/serverBlogService";
 import BlogDetailClient from "./BlogDetailClient";
 
-// SEO metadata
 export async function generateMetadata({
   params,
 }: {
@@ -13,16 +13,12 @@ export async function generateMetadata({
 
     return {
       title: blog.title,
-      description: blog.content.slice(0, 160),
+      description: blog.summary || blog.content.slice(0, 160),
       openGraph: {
         title: blog.title,
-        description: blog.content.slice(0, 160),
+        description: blog.summary || blog.content.slice(0, 160),
         images: blog.imageTitle
-          ? [
-              {
-                url: new URL(blog.imageTitle, process.env.SITE_URL!).toString(),
-              },
-            ]
+          ? [{ url: new URL(blog.imageTitle, process.env.SITE_URL).toString() }]
           : [],
         type: "article",
         publishedTime: blog.createdAt,
@@ -32,13 +28,13 @@ export async function generateMetadata({
       twitter: {
         card: "summary_large_image",
         title: blog.title,
-        description: blog.content.slice(0, 160),
+        description: blog.summary || blog.content.slice(0, 160),
         images: blog.imageTitle
-          ? [new URL(blog.imageTitle, process.env.SITE_URL!).toString()]
+          ? [new URL(blog.imageTitle, process.env.SITE_URL).toString()]
           : [],
       },
     };
-  } catch {
+  } catch (error) {
     return {
       title: "Bài viết không tồn tại",
       description: "Không tìm thấy bài viết được yêu cầu",
@@ -46,7 +42,6 @@ export async function generateMetadata({
   }
 }
 
-// Page component
 export default function BlogDetailPage({
   params,
 }: {
