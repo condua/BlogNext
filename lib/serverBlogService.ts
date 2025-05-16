@@ -1,7 +1,9 @@
 // lib/serverBlogService.ts
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 export async function fetchBlogByIdServer(id: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blogs/${id}`, {
+    const res = await fetch(`${apiUrl}/api/blogs/${id}`, {
       next: { revalidate: 3600 }, // ISR 1 giờ
     })
     
