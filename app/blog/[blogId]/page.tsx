@@ -3,11 +3,6 @@ import { Metadata } from "next";
 import { fetchBlogByIdServer } from "@/lib/serverBlogService";
 import BlogDetailClient from "./BlogDetailClient";
 
-interface PageProps {
-  params: {
-    blogId: string;
-  };
-}
 // ✅ Đừng tự gán kiểu cho params
 export async function generateMetadata({ params }: any): Promise<Metadata> {
   try {
