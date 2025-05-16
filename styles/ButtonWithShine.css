@@ -1,0 +1,12 @@
+@keyframes shine {
+  0% {
+    left: -75%;
+  }
+  100% {
+    left: 125%;
+  }
+}
+
+.group-hover\:animate-shine {
+  animation: shine 0.8s ease-in-out forwards;
+}

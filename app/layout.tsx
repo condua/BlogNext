@@ -40,7 +40,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           {/* 👈 Bọc toàn bộ app trong Redux Provider */}
           <header className="bg-white shadow-md py-4 px-6">
             <div className="max-w-5xl mx-auto flex justify-between items-center">
-              <h1 className="text-2xl font-bold text-blue-600">My Blog</h1>
+              <h1 className="text-2xl font-bold text-teal-600">MLPA Blog</h1>
               <nav className="space-x-4">
                 <a
                   href="/"

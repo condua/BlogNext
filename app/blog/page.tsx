@@ -3,17 +3,19 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBlogs } from "@/redux/blogSlice";
-import Link from "next/link";
 import { AppDispatch, RootState } from "@/redux/store";
+import BlogCard from "@/components/BlogCard";
 
 interface Blog {
   _id: string;
   title: string;
+  content: string;
+  imageTitle?: string;
   author: string;
-  // thêm các field khác nếu có (thumbnail, content, createdAt...)
+  createdAt: string;
 }
 
-// Hàm chuẩn hoá tiếng Việt để tìm kiếm không dấu
+// Hàm loại bỏ dấu và chuyển chữ thường
 function normalizeText(text: string): string {
   return text
     .normalize("NFD")
@@ -23,15 +25,14 @@ function normalizeText(text: string): string {
     .toLowerCase();
 }
 
-export default function BlogListPage() {
+export default function BlogList() {
   const dispatch: AppDispatch = useDispatch();
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const { blogs, loading, error } = useSelector(
     (state: RootState) => state.blog
   );
-
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [isFocused, setIsFocused] = useState<boolean>(false);
 
   useEffect(() => {
     dispatch(fetchBlogs());
@@ -48,61 +49,44 @@ export default function BlogListPage() {
     );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-indigo-50 px-6 py-12">
-      <div className="max-w-4xl mx-auto">
-        <h2 className="text-4xl font-extrabold text-gray-800 mb-8 text-center">
-          📚 Các Bài Viết
-        </h2>
+    <div className="max-w-7xl mx-auto px-4 py-10 ">
+      <h1 className="text-3xl font-bold text-center mb-6">Các bài viết hay</h1>
 
-        {/* Thanh tìm kiếm */}
-        <div className="mb-8 relative">
-          <input
-            type="text"
-            placeholder="Tìm kiếm theo tiêu đề..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setTimeout(() => setIsFocused(false), 100)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
-          />
-          {isFocused && searchTerm && filteredBlogs.length > 0 && (
-            <ul className="absolute z-10 w-full bg-white border border-gray-200 rounded-b-lg shadow-md mt-1 max-h-60 overflow-y-auto">
-              {filteredBlogs.slice(0, 5).map((blog: Blog) => (
-                <li
-                  key={blog._id}
-                  onMouseDown={() => setSearchTerm(blog.title)}
-                  className="px-4 py-2 hover:bg-indigo-100 cursor-pointer"
-                >
-                  {blog.title}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        {/* Danh sách bài viết */}
-        <ul className="space-y-6">
-          {filteredBlogs.length > 0 ? (
-            filteredBlogs.map((blog: Blog) => (
+      {/* Thanh tìm kiếm */}
+      <div className="mb-8 text-center relative w-full mx-auto">
+        <input
+          type="text"
+          placeholder="Tìm kiếm theo tiêu đề..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setTimeout(() => setIsFocused(false), 100)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+        {isFocused && searchTerm && filteredBlogs.length > 0 && (
+          <ul className="absolute z-10 w-full bg-white border border-gray-200 rounded-b-lg shadow-md mt-1 max-h-60 overflow-y-auto text-left">
+            {filteredBlogs.slice(0, 5).map((blog) => (
               <li
                 key={blog._id}
-                className="bg-white p-6 rounded-2xl shadow-md transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
+                onMouseDown={() => setSearchTerm(blog.title)}
+                className="px-4 py-2 hover:bg-blue-100 cursor-pointer"
               >
-                <Link
-                  href={`/blog/${blog._id}`}
-                  className="text-2xl font-semibold text-indigo-700 hover:text-indigo-900 transition-colors duration-200"
-                >
-                  {blog.title}
-                </Link>
-                <p className="mt-2 text-gray-600">{blog.author}</p>
+                {blog.title}
               </li>
-            ))
-          ) : (
-            <p className="text-center text-gray-500 col-span-full">
-              Không tìm thấy bài viết nào.
-            </p>
-          )}
-        </ul>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      {/* Danh sách bài viết */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {filteredBlogs.length > 0 ? (
+          filteredBlogs.map((blog) => <BlogCard key={blog._id} blog={blog} />)
+        ) : (
+          <p className="col-span-full text-center text-gray-500">
+            Không tìm thấy bài viết nào.
+          </p>
+        )}
       </div>
     </div>
   );

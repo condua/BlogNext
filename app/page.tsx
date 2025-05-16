@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-
+import "./button.css";
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-[#e0f7fa] via-[#f1f8ff] to-[#fff3e0] flex items-center justify-center px-6">
@@ -12,7 +12,7 @@ export default function HomePage() {
           transition={{ duration: 1 }}
           className="text-5xl md:text-6xl font-extrabold text-gray-800 drop-shadow-md mb-6"
         >
-          Welcome to <span className="text-indigo-600">My Blog</span>
+          Welcome to <span className="text-teal-600">MLPA Blog</span>
         </motion.h2>
 
         <motion.p
@@ -32,9 +32,12 @@ export default function HomePage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.8 }}
-          className="inline-block bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition"
+          className="relative overflow-hidden inline-block bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition duration-300 group"
         >
-          🚀 Read the Blog
+          <span className="relative z-10">🚀 Read the Blog</span>
+
+          {/* Lớp ánh sáng */}
+          <span className="shine-effect absolute top-0 left-[-75%] w-[50%] h-full bg-white opacity-30 transform -skew-x-20 group-hover:animate-shine-loop pointer-events-none"></span>
         </motion.a>
       </section>
     </main>
