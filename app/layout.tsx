@@ -13,7 +13,7 @@ export const metadata = {
   icons: {
     icon: "/favicon.ico", // favicon thường
     shortcut: "/favicon.ico", // optional
-    apple: "/apple-touch-icon.png", // optional cho iOS
+    apple: "/favicon.ico", // optional cho iOS
   },
 };
 
